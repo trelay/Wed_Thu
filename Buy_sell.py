@@ -38,7 +38,7 @@ def op_shares(action,rate,p_yesterday_close, popen):
         shares_total = shares_own + shares_act
         money = money - shares_act * popen * 100
         
-    elif action == -1 and popen < (p_yesterday_close*(1+ rate* rate_down)):
+    elif action == -1 and popen < (p_yesterday_close*(1- rate* rate_down)):
         shares_act = math.floor(money/(popen*100))
         shares_total = shares_own - shares_act
         money = money + shares_act * popen * 100
