@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 #coding=utf-8
 import matplotlib.pyplot as plt
 import tushare as ts
@@ -17,10 +17,9 @@ df = ts.get_hist_data('000651')
 #data_2019.plot()
 #plt.show()
 
-shares_own = 10
 money = 50000
-shares_act = 0
-shares_total = 0
+shares_own = 10
+shares_total = shares_own
 
 action = 0
 rate = 0
@@ -33,12 +32,19 @@ p_yesterday_close= 0
 
 
 def op_shares(action,rate,p_yesterday_close, popen):
+    global money
+    global shares_own
+    global shares_total
+
+    shares_act = 0
     if action == 1 and popen > (p_yesterday_close*(1+ rate* rate_up)):
+        print("Buying")
         shares_act = math.floor(money/(popen*100))
         shares_total = shares_own + shares_act
         money = money - shares_act * popen * 100
         
     elif action == -1 and popen < (p_yesterday_close*(1- rate* rate_down)):
+        print("sell")
         shares_act = math.floor(money/(popen*100))
         shares_total = shares_own - shares_act
         money = money + shares_act * popen * 100
@@ -46,29 +52,29 @@ def op_shares(action,rate,p_yesterday_close, popen):
 data = df.sort_index(ascending=True)
 t=0
 for date in data.index:
-    
-    data_day_df = DataFrame(data, index=[i])
+    #print(date)
+    data_day_df = DataFrame(data, index=[date])
     popen = DataFrame(data_day_df.T, index = ["open"]) .values[0][0]
     pclose = DataFrame(data_day_df.T, index = ["close"]) .values[0][0] 
     phigh = DataFrame(data_day_df.T, index = ["high"]) .values[0][0] 
     plow = DataFrame(data_day_df.T, index = ["low"]) .values[0][0]
-    p_Base = pclose
 
     if t>0:
         op_shares(action,rate,p_yesterday_close,popen)
-    else:
-        money = shares_own * pclose
 
-    if phigh = pclose:
+    if phigh == pclose:
         action = 0
         rate = 0
     elif phigh > pclose:
         action = 1
         rate = (phigh - pclose)/pclose
-    else:
-        action = -1
+    elif phigh < pclose:
+        action == -1
         rate = (pclose - phigh)/pclose
 
     p_yesterday_close = pclose
 
     t+=1
+
+print('The money I have: {0}'.format(money))
+print('The share I have: {0}'.format(shares_total))
