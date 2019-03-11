@@ -7,8 +7,9 @@ import pandas as pd
 import numpy as np
 import math
 
-#df = ts.get_hist_data('000651')
-df = ts.get_hist_data('sh')
+df = ts.get_hist_data('000651')
+#df = ts.get_hist_data('sh')
+#df = ts.get_hist_data('sz')
 df["Date"] = df.index
 
 df['Date'] = pd.to_datetime(df['Date'])
@@ -36,23 +37,29 @@ print("Day_1: {}".format(df_1["p_change"].sum()))
 print("Day_2: {}".format(df_2["p_change"].sum()))
 print("Day_3: {}".format(df_3["p_change"].sum()))
 print("Day_4: {}".format(df_4["p_change"].sum()))
-"""
+
 money = 50000
 shares_own = 10
+
+
+server_1 = 2/10000
+server_2 = 1/1000
 
 def sell_out(p_trade):
     global money
     global shares_own
     shares_act = shares_own
     shares_own = shares_own - shares_act
-    money = money + shares_act * p_trade * 100
+    money_trade = shares_act * p_trade * 100
+    money = money +  money_trade -(money_trade *(server_1 + server_2))
 
 def buy_in(p_trade):
     global money
     global shares_own
     shares_act = math.floor(money/(p_trade*100))
     shares_own = shares_own + shares_act
-    money = money - shares_act * p_trade * 100
+    money_trade = shares_act * p_trade * 100
+    money = money - money_trade - (money_trade *server_1)
 
 data = df.sort_index(ascending=True)
 for date in data.index:
@@ -61,13 +68,14 @@ for date in data.index:
     phigh = DataFrame(data_day_df.T, index = ["high"]) .values[0][0] 
     plow = DataFrame(data_day_df.T, index = ["low"]) .values[0][0]
     pclose = DataFrame(data_day_df.T, index = ["close"]) .values[0][0] 
-    p_trade = (plow+ phigh)/2
+    p_trade_s = ((plow+ phigh)/2 + phigh)/2
+    p_trade_b = ((plow+ phigh)/2 + plow)/2
 
     if int(Week_Number) == 1:
-        sell_out(pclose)
+        sell_out(p_trade_s)
     elif int(Week_Number) ==2:
-        buy_in(pclose)
+        buy_in(p_trade_b)
 
 print('The money I have: {0}'.format(money))
 print('The share I have: {0}'.format(shares_own))
-"""
+""""""
