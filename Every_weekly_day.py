@@ -13,9 +13,9 @@ df = ts.get_hist_data('000651')
 df["Date"] = df.index
 
 df['Date'] = pd.to_datetime(df['Date'])
+#df = df[df["Date"]> pd.to_datetime("2018-01-23")]
+
 df['Week_Number'] = df['Date'].dt.dayofweek
-
-
 is_0 = df["Week_Number"] ==0
 df_0 = df[is_0]
 
@@ -32,11 +32,11 @@ is_4 = df["Week_Number"] ==4
 df_4 = df[is_4]
 
 print("Let's compete the pprice(%) of dayofweek:")
-print("Day_0: {}".format(df_0["p_change"].sum()))
-print("Day_1: {}".format(df_1["p_change"].sum()))
-print("Day_2: {}".format(df_2["p_change"].sum()))
-print("Day_3: {}".format(df_3["p_change"].sum()))
-print("Day_4: {}".format(df_4["p_change"].sum()))
+print("Day_0: {}, Days_of_>0: {}, Days_of_<0: {}".format(df_0["p_change"].sum(), (df_0['p_change']>0).sum(), (df_0['p_change']<0).sum()))
+print("Day_1: {}, Days_of_>0: {}, Days_of_<0: {}".format(df_1["p_change"].sum(), (df_1['p_change']>0).sum(), (df_1['p_change']<0).sum()))
+print("Day_2: {}, Days_of_>0: {}, Days_of_<0: {}".format(df_2["p_change"].sum(), (df_2['p_change']>0).sum(), (df_2['p_change']<0).sum()))
+print("Day_3: {}, Days_of_>0: {}, Days_of_<0: {}".format(df_3["p_change"].sum(), (df_3['p_change']>0).sum(), (df_3['p_change']<0).sum()))
+print("Day_4: {}, Days_of_>0: {}, Days_of_<0: {}".format(df_4["p_change"].sum(), (df_4['p_change']>0).sum(), (df_4['p_change']<0).sum()))
 
 money = 50000
 shares_own = 10
@@ -78,4 +78,4 @@ for date in data.index:
 
 print('The money I have: {0}'.format(money))
 print('The share I have: {0}'.format(shares_own))
-""""""
+
