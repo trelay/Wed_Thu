@@ -72,9 +72,9 @@ for date in data.index:
     p_trade_b = ((plow+ phigh)/2 + plow)/2
 
     if int(Week_Number) == 1:
-        sell_out(pclose)
-    elif int(Week_Number) ==2:
-        buy_in(pclose)
+        sell_out(p_trade_s)
+    elif int(Week_Number) ==3:
+        buy_in(p_trade_b)
 
 print('The money I have: {0}'.format(money))
 print('The share I have: {0}'.format(shares_own))

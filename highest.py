@@ -7,11 +7,11 @@ import pandas as pd
 import numpy as np
 import math
 
-share_code = "000651"
+share_code = "sz"
 
-df = ts.get_hist_data(share_code)
+#df = ts.get_hist_data(share_code)
 #df = ts.get_hist_data('sh')
-#df = ts.get_hist_data('sz')
+df = ts.get_hist_data('sz')
 df["Date"] = df.index
 
 df['Date'] = pd.to_datetime(df['Date'])

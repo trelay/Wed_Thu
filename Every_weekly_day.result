@@ -1,0 +1,21 @@
+Test the result on Mar.19 2019.
+
+Condition:
+    money = 50000
+    shares_own = 10
+
+    server_1 = 2/10000
+    server_2 = 1/1000
+
+
+
+    Day_0: 41.73, Days_of_>0: 57, Days_of_<0: 55
+    Day_1: 30.43, Days_of_>0: 59, Days_of_<0: 56
+    Day_2: -10.32, Days_of_>0: 57, Days_of_<0: 62
+    Day_3: 9.299999999999995, Days_of_>0: 62, Days_of_<0: 59
+    Day_4: 18.590000000000003, Days_of_>0: 59, Days_of_<0: 61
+    The money I have: 595223.0073000004
+    The share I have: 0
+
+with 3% zhisun:
+    
