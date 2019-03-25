@@ -5,15 +5,38 @@ Day_2: -12.82, Days_of_>0: 57, Days_of_<0: 63
 Day_3: 9.299999999999995, Days_of_>0: 62, Days_of_<0: 59
 Day_4: 15.380000000000003, Days_of_>0: 58, Days_of_<0: 61
 
-Totall found 49 lowest on Wed.
-Highest price happen 25 times before 10:30 on the morning.
-Highest price happen 4 times after 10:30 on the morning.
-Highest price happen 7 times before 14:00 on the afternoon
-Highest price happen 13 times after 14:00 on the afternoon
-
-
-Totall found 45 highest on Tus.
-Highest price happen 30 times before 10:30 on the morning.
+################## 000651 ##################################
+Totall found 50 lowest on Wed.
+lowest price happen 25 times before 10:30 on the morning.
+lowest price happen 4 times after 10:30 on the morning.
+lowest price happen 8 times before 14:00 on the afternoon
+lowest price happen 13 times after 14:00 on the afternoon
+Totall found 46 highest on Tus.
+Highest price happen 31 times before 10:30 on the morning.
 Highest price happen 1 times after 10:30 on the morning.
 Highest price happen 5 times before 14:00 on the afternoon
 Highest price happen 9 times after 14:00 on the afternoon
+
+################## 000002 ##################################
+Totall found 49 lowest on Wed.
+lowest price happen 31 times before 10:30 on the morning.
+lowest price happen 5 times after 10:30 on the morning.
+lowest price happen 4 times before 14:00 on the afternoon
+lowest price happen 9 times after 14:00 on the afternoon
+
+Totall found 52 highest on Tus.
+Highest price happen 33 times before 10:30 on the morning.
+Highest price happen 0 times after 10:30 on the morning.
+Highest price happen 4 times before 14:00 on the afternoon
+Highest price happen 15 times after 14:00 on the afternoon
+################## 000568 ##################################
+Totall found 48 lowest on Wed.
+lowest price happen 22 times before 10:30 on the morning.
+lowest price happen 5 times after 10:30 on the morning.
+lowest price happen 5 times before 14:00 on the afternoon
+lowest price happen 16 times after 14:00 on the afternoon
+Totall found 46 highest on Tus.
+Highest price happen 33 times before 10:30 on the morning.
+Highest price happen 1 times after 10:30 on the morning.
+Highest price happen 5 times before 14:00 on the afternoon
+Highest price happen 7 times after 14:00 on the afternoon
