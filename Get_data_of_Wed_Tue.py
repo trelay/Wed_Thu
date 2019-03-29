@@ -13,8 +13,8 @@ buy_price = 0
 
 def get_hist_df(code):
     pro = ts.pro_api('418443b56e07ac5c235d232406b44db8f80484569f8240f4554c6d67')
-    df = pro.query('daily', ts_code='000651.SZ', start_date='20160701', end_date='20190322')
-
+    #df = pro.query('daily', ts_code='000651.SZ', start_date='20160701', end_date='20190322')
+    df = pro.query('daily', ts_code='000651.SZ', start_date='20181228', end_date='20190322')
     df['trade_date'] = pd.to_datetime(df['trade_date'])
     df['Week_Number'] = df['trade_date'].dt.dayofweek
 
@@ -44,4 +44,3 @@ def get_hist_df(code):
 
 if __name__=="__main__":
     df_2 = get_hist_df("000651")
-    print(df_2)

@@ -88,7 +88,7 @@ def trade_share(df, lose_point):
         p_trade_s = ((plow+ phigh)/2 + phigh)/2
         p_trade_b = ((plow+ phigh)/2 + plow)/2
 
-        if int(Week_Number) == 1 and ppchange >-lose_point: # and p_trade_s > buy_price:
+        if int(Week_Number) == 1 and ppchange >-lose_point: 
             sell_out(p_trade_s)
             share_on_hand = False
         elif int(Week_Number) ==3 and ppchange < lose_point:
