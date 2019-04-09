@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 #coding=utf-8
 import matplotlib.pyplot as plt
@@ -12,10 +13,11 @@ money = 50000
 shares_own = 10
 buy_price = 0
 
+mux = True
+
 def get_hist_df(code):
     pro = ts.pro_api(token)
     df = pro.query('daily', ts_code=code, start_date='20160701', end_date='20190322')
-    #df = pro.query('daily', ts_code=code, start_date='2010202', end_date='20181222')
 
     df['trade_date'] = pd.to_datetime(df['trade_date'])
     df['Week_Number'] = df['trade_date'].dt.dayofweek
@@ -50,7 +52,8 @@ def get_hist_df(code):
 def trade_share(df, lose_point):
 
     global buy_price
-    service_1 = 1.8/10000
+    global mux
+    service_1 = 1.6/10000
     service_2 = 1/1000
     share_on_hand = True
     buy_in_act = 0.0
@@ -89,9 +92,10 @@ def trade_share(df, lose_point):
         p_trade_s = ((plow+ phigh)/2 + phigh)/2
         p_trade_b = ((plow+ phigh)/2 + plow)/2
 
-        if int(Week_Number) == 2 and ppchange >-lose_point: 
+        if int(Week_Number) == 1 and ppchange >-lose_point and mux == True: 
             sell_out(p_trade_s)
             share_on_hand = False
+            mux = mux
         elif int(Week_Number) ==3 and ppchange < lose_point:
             buy_in_act = p_trade_b
             #buy_price = p_trade_b
@@ -100,9 +104,10 @@ def trade_share(df, lose_point):
         
         if share_on_hand and popen< buy_in_act*(1-0.05):
             sell_out(popen)
-        
+
         tmp_margin = int((money + shares_own*100*pclose)/10000)
-        print("On {} tmp_margin I have: {}".format(trade_date, tmp_margin))
+        print(trade_date)
+        print("TMP Money I have: {0}".format(tmp_margin))
 
     #print('The money I have: {0}'.format(money))
     #print('The share I have: {0}'.format(shares_own))
@@ -120,3 +125,5 @@ if __name__=="__main__":
         print("Trade_stop_point: {0}".format(lose_point))
         trade_share(df, lose_point)
         lose_point +=1
+ 
+    

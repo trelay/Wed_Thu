@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 #coding=utf-8
 import matplotlib.pyplot as plt
 import tushare as ts
@@ -10,50 +10,33 @@ token = '418443b56e07ac5c235d232406b44db8f80484569f8240f4554c6d67'
 
 money = 50000
 shares_own = 10
-buy_price = 0
 
 def get_hist_df(code):
     pro = ts.pro_api(token)
     df = pro.query('daily', ts_code=code, start_date='20160701', end_date='20190322')
-    #df = pro.query('daily', ts_code=code, start_date='2010202', end_date='20181222')
+    #df = pro.query('daily', ts_code=code, start_date='20190302', end_date='20190322')
 
     df['trade_date'] = pd.to_datetime(df['trade_date'])
     df['Week_Number'] = df['trade_date'].dt.dayofweek
     df.index = df['trade_date']
     del df['trade_date']
 
-    '''
-    is_0 = df["Week_Number"] ==0
-    df_0 = df[is_0]
-
-    is_1 = df["Week_Number"] ==1
-    df_1 = df[is_1]
-
-    is_2 = df["Week_Number"] ==2
-    df_2 = df[is_2]
-
-    is_3 = df["Week_Number"] ==3
-    df_3 = df[is_3]
-
-    is_4 = df["Week_Number"] ==4
-    df_4 = df[is_4]
-
-    print("Let's compete the pprice(%) of dayofweek:")
-    print("Day_0: {}, Days_of_>0: {}, Days_of_<0: {}".format(df_0["p_change"].sum(), (df_0['p_change']>0).sum(), (df_0['p_change']<0).sum()))
-    print("Day_1: {}, Days_of_>0: {}, Days_of_<0: {}".format(df_1["p_change"].sum(), (df_1['p_change']>0).sum(), (df_1['p_change']<0).sum()))
-    print("Day_2: {}, Days_of_>0: {}, Days_of_<0: {}".format(df_2["p_change"].sum(), (df_2['p_change']>0).sum(), (df_2['p_change']<0).sum()))
-    print("Day_3: {}, Days_of_>0: {}, Days_of_<0: {}".format(df_3["p_change"].sum(), (df_3['p_change']>0).sum(), (df_3['p_change']<0).sum()))
-    print("Day_4: {}, Days_of_>0: {}, Days_of_<0: {}".format(df_4["p_change"].sum(), (df_4['p_change']>0).sum(), (df_4['p_change']<0).sum()))
-    '''
     return df
 
-def trade_share(df, lose_point):
+class init_list(object):
+    def __init__(self,size):
+        self.list = [0]*size
+        self.size = size
+    def get(self):
+        return self.list
+    def add(self, ele):
+        self.list.append(ele)
+        self.list = self.list[-self.size:]
 
-    global buy_price
-    service_1 = 1.8/10000
+def trade_share(df):
+
+    service_1 = 1.6/10000
     service_2 = 1/1000
-    share_on_hand = True
-    buy_in_act = 0.0
 
     def sell_out(p_trade):
         global money
@@ -86,37 +69,40 @@ def trade_share(df, lose_point):
         plow = DataFrame(data_day_df.T, index = ["low"]) .values[0][0]
         ppchange = DataFrame(data_day_df.T, index = ["pct_chg"]) .values[0][0]
         pclose = DataFrame(data_day_df.T, index = ["close"]) .values[0][0] 
-        p_trade_s = ((plow+ phigh)/2 + phigh)/2
-        p_trade_b = ((plow+ phigh)/2 + plow)/2
-
-        if int(Week_Number) == 2 and ppchange >-lose_point: 
-            sell_out(p_trade_s)
-            share_on_hand = False
-        elif int(Week_Number) ==3 and ppchange < lose_point:
-            buy_in_act = p_trade_b
-            #buy_price = p_trade_b
-            buy_in(p_trade_b)
-            share_on_hand = True
-        
-        if share_on_hand and popen< buy_in_act*(1-0.05):
+        #p_trade_s = ((plow+ phigh)/2 + phigh)/2
+        #p_trade_b = ((plow+ phigh)/2 + plow)/2
+        if sum(up_list.get()) == up_signal:
             sell_out(popen)
-        
+
+        elif sum(down_list.get()) == down_signal:
+            buy_in(popen)
+
+        if ppchange > 1.0:
+            up_list.add(1)
+            down_list.add(0)
+        elif ppchange < -1.0:
+            up_list.add(0)
+            down_list.add(1)
+        else:
+            up_list.add(0)
+            down_list.add(0)
+
+
         tmp_margin = int((money + shares_own*100*pclose)/10000)
         print("On {} tmp_margin I have: {}".format(trade_date, tmp_margin))
 
-    #print('The money I have: {0}'.format(money))
-    #print('The share I have: {0}'.format(shares_own))
     gross_margin = int((money + shares_own*100*pclose)/10000)
     print("Money I have: {0}".format(gross_margin))
 
 
-if __name__=="__main__":
-    lose_point =5
-    while lose_point <6:
 
-        money = 50000
-        shares_own = 10
-        df = get_hist_df('000651.SZ')
-        print("Trade_stop_point: {0}".format(lose_point))
-        trade_share(df, lose_point)
-        lose_point +=1
+if __name__ == "__main__":
+    up_signal = 2
+    down_signal = 2
+
+    up_list = init_list(up_signal)
+    down_list = init_list(down_signal)
+    df = get_hist_df("000651.sz")
+    print(df)
+    trade_share(df)
+

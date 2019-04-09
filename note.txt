@@ -1,0 +1,23 @@
+# to create MariaDB:
+
+insert into mysql.user(Host,User,Password) values("%","admin",password("admin"));
+GRANT ALL PRIVILEGES ON Database.* TO 'admin'@'%'IDENTIFIED BY 'admin' WITH GRANT OPTION;
+
+vi /etc/mysql/mariadb.conf.d/50-server.cnf
+and comment # bind =127.0.0.1
+systemctl restart mariadb
+
+
+'''
+CREATE TABLE sz000001
+(
+   tick_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   date varchar(10) not null, 
+   time varchar(8) not null,
+   price float not null, 
+   p_chg float not null,
+   share int not null, 
+   volume int not null, 
+   action boolean not null
+);
+'''
