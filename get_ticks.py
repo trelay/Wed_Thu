@@ -8,17 +8,22 @@ from HTMLLogger import HTMLLogger
 import pymysql
 logger=HTMLLogger(name="Get daily tick", html_filename="tick.html", console_log=True)
  
-def getHtml(url):
+def getHtml(date, url):
     sleep(2)
     try:
         r = requests.get(url)
+        if r.status_code ==200:
+            r.encoding='gbk'
+            return r.text
+        else:
+            logger.error("Resource is not reachable, I record the date down in txt")
+            with open("error_date.txt", "a+") as f:
+                f.write(date+"\n")
+            return ""
     except:
-        logger.error("Network error")
-    if r.status_code ==200:
-        r.encoding='gbk'
-        return r.text
-    else:
-        logger.error("Resource is not reachable")
+        logger.error("Network error, I record the date down in txt")
+        with open("error_date.txt", "a+") as f:
+            f.write(date+"\n")
         return ""
  
 def getTable(html):
@@ -96,13 +101,12 @@ def get_tick(dateObj,symbol):
     page = 1
     while True:
         url = 'http://market.finance.sina.com.cn/transHis.php?symbol=' + symbol + '&date=' + date + '&page=' + str(page)
-        html = getHtml(url)
+        html = getHtml(date,url)
         table = getTable(html)
         if len(table) != 0:
             tbody = getBody(date,table[0])
             daily_tick = daily_tick + tbody
             if len(tbody) == 0:
-                logger.info("Finished getting daily tick for {} on {}".format(symbol,date))
                 break
             if page == 1:
                 thead = getTitle(table[0])
@@ -115,45 +119,46 @@ def get_tick(dateObj,symbol):
     daily_tick.reverse()
     return daily_tick
 
-def insert_data(symbol,mysql_cmd):
+def insert_data(symbol,dateobj, mysql_cmd, atempt_insert):
     db = pymysql.connect("192.168.0.106","tick_user","426942","Ticks" )
     cursor = db.cursor()
-    try:
-        create_tb ='''CREATE TABLE IF NOT EXISTS {} (
-        (
-        tick_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        date varchar(10) not null, 
-        time varchar(8) not null,
-        price float not null, 
-        p_chg float not null,
-        share int not null, 
-        volume int not null, 
-        action boolean not null
-        );'''.format(symbol)
-        cursor.execute(create_tb)
-    except:
-        logger.error("failed to create table fro {}".format(symbol))
 
     try:
         cursor.execute(mysql_cmd)
         db.commit()
     except:
         db.rollback()
+
+    try:
+        cursor.execute('''select count(*) from {} where date = '{}' '''.format(symbol,dateobj.strftime("%Y-%m-%d")))
+        inserted = cursor.fetchall()[0][0]
+    except:
+        inserted = 0
+
+
+    if inserted == atempt_insert:
+        logger.info("Inserted {} trade of {} on {}.".format(inserted, symbol, dateobj))
+    else:
+        logger.error("Can't insert date on {}, check the status of Mysql.".format(dateobj))
+
     db.close()
 
 def main(symbol):
     
-    date_Obj = datetime.datetime(2010, 4, 4)
+    date_Obj = datetime.datetime(2010, 1, 1)
     while datetime.datetime.now() > date_Obj:
         
-        if date_Obj.weekday() <6:
+        if date_Obj.weekday() <5:
             daily_tick = get_tick(date_Obj,symbol)
             values = ","
             values = values.join(daily_tick)
-            if len(values) >0:
 
-                mysql_cmd = "insert into {} (date, time, price, p_chg, share, volume, action) values ".format(symbol) + values
-                insert_data(symbol, mysql_cmd)
+            if len(daily_tick) >0:
+                mysql_cmd = "insert into {} (date, time, price, p_chg, share, volume, action) values {}".format(symbol, values)
+                insert_data(symbol, date_Obj,mysql_cmd, len(daily_tick))
+        else:
+            logger.info("{} is weekend, skip.".format(date_Obj))
+
         date_Obj = date_Obj+ datetime.timedelta(days=1)
 
 if __name__ == "__main__":

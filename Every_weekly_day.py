@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 import math
 
-df = ts.get_hist_data('000651')
+df = ts.get_hist_data('000002')
 #df = ts.get_hist_data('sh')
 #df = ts.get_hist_data('sz')
 df["Date"] = df.index

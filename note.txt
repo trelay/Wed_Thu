@@ -8,8 +8,7 @@ and comment # bind =127.0.0.1
 systemctl restart mariadb
 
 
-'''
-CREATE TABLE sz000001
+'''CREATE TABLE IF NOT EXISTS sh000001 (
 (
    tick_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    date varchar(10) not null, 
@@ -19,5 +18,10 @@ CREATE TABLE sz000001
    share int not null, 
    volume int not null, 
    action boolean not null
-);
-'''
+);'''.format
+
+
+1. add DATE "Resource not reachable" and "Network error" in txt
+2. run get_daily_tick.
+3. rm if any recode of DATE is in
+4. record DATE again
